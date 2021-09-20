@@ -2,7 +2,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
-QueueHandle_t xQ1;
+QueueHandle_t queue;
 void Tone(void *data)
 {
 	while(1)
@@ -45,7 +45,7 @@ void Tfour(void *data)
 int var=10;
 while(1)
 {
-		xQueueSend(xQ1,&var,0);
+		xQueueSend(queue,&var,0);
 		vTaskDelay(3000/portTICK_PERIOD_MS);
 }
 }
@@ -57,7 +57,7 @@ while(1)
 
 
  		int buff;
- 		xQueueReceive(xQ1,&buff,0);
+ 		xQueueReceive(queue,&buff,0);
  		
  			printf("In Task 5 received message from Task 4 is %d\n",buff);
  		vTaskDelay(3000/portTICK_PERIOD_MS);
@@ -70,5 +70,5 @@ void app_main(void)
 		xTaskCreate(Tthree,"Task_3",2048,NULL,5,NULL);
 		xTaskCreate(Tfour,"Task_4",2048,NULL,3,NULL);
 		xTaskCreate(Tfive,"Task_5",2048,NULL,1,NULL);
-		xQ1= xQueueCreate(3,sizeof(int));
+		queue= xQueueCreate(3,sizeof(int));
 	}
